@@ -2,49 +2,60 @@ import React from "react";
 import Header from "../layouts/Header.jsx";
 import Profile from "../components/Profile.jsx";
 
-export default function Home({ gradeList, conversionRule }) {
-  const gradeColor = (grade) => {
-    if (grade == 4.0) return "bg-[var(--a-score-color)]";
-    if (grade >= 3.0) return "bg-[var(--b-score-color)]";
-    if (grade >= 2.0) return "bg-[var(--c-score-color)]";
-    if (grade >= 1.0) return "bg-[var(--d-score-color)]";
+export default function Home({ gradeList, conversionRule, isLinear }) {
+  const gradeColor = (letter) => {
+    if (letter == "N/A") return "bg-[var(--dark-blue-primary)]";
+    if (letter == "A+" || letter == "A" || letter == "A-")
+      return "bg-[var(--a-score-color)]";
+    if (letter == "B+" || letter == "B" || letter == "B-")
+      return "bg-[var(--b-score-color)]";
+    if (letter == "C+" || letter == "C" || letter == "C-")
+      return "bg-[var(--c-score-color)]";
+    if (letter == "D+" || letter == "D" || letter == "D-")
+      return "bg-[var(--d-score-color)]";
     return "bg-[var(--f-score-color)]";
   };
-  console.log(conversionRule(8.5));
-  console.log(gradeList[0].grade10);
+
   return (
     <div>
       <Header />
       <div className="mx-20 my-10 space-y-6">
         {/* MAIN CONTENT GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Profile />
-
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* GPA Card */}
-          <div className="bg-white p-6 rounded shadow-lg">
-            <h3 className="text-[var(--dark-blue-primary)] font-bold text-xl text-center mb-2">
-              GPA
-            </h3>
-            <p className="text-6xl font-bold text-yellow-600 text-center mb-6 mt-4">
-              4.0
-            </p>
-            <div className="space-y-4 px-4 flex flex-col gap-5">
-              <div className="flex justify-between border-b border-gray-300 pb-1">
-                <span className="font-bold text-gray-600">
-                  Last semester's credits
-                </span>
-                <span className="text-gray-400">----</span>
-              </div>
-              <div className="flex justify-between border-b border-gray-300 pb-1">
-                <span className="font-bold text-gray-600">
-                  Accumulated Credits
-                </span>
-                <span className="text-gray-400">
-                  {gradeList.reduce((acc, ele) => {
-                    return acc + Number(ele.credits);
-                  })}
-                </span>
-              </div>
+          <div className="bg-white p-6 rounded shadow-lg flex justify-around h-full space-x-6">
+            <div className="flex flex-col items-center justify-center m-0">
+              <h3 className="text-[var(--dark-blue-primary)] font-bold text-xl text-center mb-2">
+                GPA
+              </h3>
+              <p className="text-6xl font-bold text-yellow-600 text-center mb-6 mt-4">
+                {(
+                  gradeList.reduce((acc, course) => {
+                    const gradeConverted =
+                      conversionRule(course.grade10, isLinear)
+                        ?.gradeConverted || 0;
+                    return acc + gradeConverted * Number(course.credits);
+                  }, 0) /
+                    gradeList.reduce(
+                      (acc, course) => acc + Number(course.credits),
+                      0
+                    ) || 1
+                ).toFixed(2)}
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center justify-center">
+              <h3 className="text-[var(--dark-blue-primary)] font-bold text-xl text-center mb-2">
+                Credits
+              </h3>
+              <p className="text-6xl font-bold text-yellow-600 text-center mb-6 mt-4">
+                {gradeList.reduce((acc, course) => {
+                  if (course.grade10 >= 5) {
+                    return acc + Number(course.credits);
+                  }
+                  return acc;
+                }, 0)}
+              </p>
             </div>
           </div>
 
@@ -66,19 +77,23 @@ export default function Home({ gradeList, conversionRule }) {
             </div>
             <div className="flex h-48">
               {/* Course Bar 1 */}
-              {gradeList.slice(0, 8).map((course, index) => (
+              {gradeList.slice(0, 10).map((course, index) => (
                 <div
                   key={index}
                   className={`flex-1 p-2 ${gradeColor(
-                    conversionRule(course.grade10)?.grade4
+                    conversionRule(course.grade10, isLinear).letter
                   )} text-white flex flex-col justify-between items-center space-y-2 py-5 w-1/8`}
                 >
-                  <span className="text-md font-bold">{course.courseName}</span>
+                  <span className="text-sm grow mb-auto">
+                    {course.courseName}
+                  </span>
                   <span className="text-2xl font-bold">
-                    {conversionRule(course.grade10)?.grade4}
+                    {conversionRule(course.grade10, isLinear).gradeConverted}
                   </span>
                   <span className="font-bold text-lg">
-                    {conversionRule(course.grade10)?.letter}
+                    {conversionRule(course.grade10, isLinear)?.letter !== "N/A"
+                      ? conversionRule(course.grade10, isLinear)?.letter
+                      : ""}
                   </span>
                   <span className="text-md">{course.grade10}</span>
                 </div>

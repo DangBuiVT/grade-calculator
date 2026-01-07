@@ -67,7 +67,7 @@ export default function AddGrade({ setPopup, setGradelist }) {
           </label>
           <input
             type="text"
-            value={newGrade.courseCode}
+            value={newGrade.courseCode === "" ? "N/A" : newGrade.courseCode}
             onChange={(e) => handleInputChange("courseCode", e.target.value)}
             className="ml-auto bg-white border px-3 py-2 text-lg rounded-xl"
           />

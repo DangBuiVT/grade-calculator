@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function ConversionTable({ conversionTb, setConversions }) {
+export default function ConversionTable({
+  conversionTb,
+  setConversions,
+  isLinear,
+  setIsLinear,
+}) {
   // Marking parameters: grade in scale 10, grade in scale 4, letter grade
   const addRow = () => {
-    const newRow = { grade10: 0, grade4: 0, letter: "" };
+    const newRow = { grade10: 0, gradeConverted: 0, letter: "" };
     setConversions((prevConversions) => [...prevConversions, newRow]);
   };
   const handleInputChange = (index, field, value) => {
@@ -15,17 +20,47 @@ export default function ConversionTable({ conversionTb, setConversions }) {
     });
     setConversions(updatedConversions);
   };
+  const [lowestPass, setLowestPass] = useState(() => {
+    const savedLowestPass = localStorage.getItem("lowestPass");
+    return savedLowestPass ? Number(savedLowestPass) : 4.0;
+  });
   return (
     <div className="mx-20">
+      <div className="flex items-center justify-between mb-4 text-xl">
+        <div className="flex items-center space-x-4">
+          <label>Lowest Passing Grade (scale 10):</label>
+          <input
+            type="number"
+            className="bg-white border-2 py px-3"
+            value={lowestPass}
+            onChange={(e) => {
+              setLowestPass(e.target.value);
+              localStorage.setItem("lowestPass", e.target.value);
+            }}
+          />
+        </div>
+        <div className="flex items-center justify-end space-x-4 mb-4 mr-30">
+          <label className="">Linear Grading</label>
+          <input
+            type="checkbox"
+            checked={isLinear}
+            onChange={() => {
+              setIsLinear(!isLinear);
+              localStorage.setItem("isLinear", JSON.stringify(!isLinear));
+            }}
+          />
+        </div>
+      </div>
+
       <table className="w-full table-auto border-collapse border border-gray-300">
         <thead className="bg-gray-50 text-[#050038] uppercase font-bold">
           <tr>
             <th className="px-6 py-4 border text-xl">Grade (Scale 10)</th>
             <th className="px-6 py-4 border-y border-r text-xl">
-              Grade (Scale 4)
+              Grade (Converted)
             </th>
             <th className="px-6 py-4 border-y border-r text-xl">
-              Grade in Letters
+              Grade in Letters (Optional)
             </th>
           </tr>
         </thead>
@@ -47,9 +82,9 @@ export default function ConversionTable({ conversionTb, setConversions }) {
                 <input
                   type="number"
                   step="0.1"
-                  value={row.grade4}
+                  value={row.gradeConverted}
                   onChange={(e) =>
-                    handleInputChange(index, "grade4", e.target.value)
+                    handleInputChange(index, "gradeConverted", e.target.value)
                   }
                   className="bg-white px-3 py-2 text-lg"
                 />
@@ -98,7 +133,7 @@ export default function ConversionTable({ conversionTb, setConversions }) {
       </table>
       <button
         onClick={() => {
-          window.location.href = "/home";
+          window.location.href = "/";
         }}
         className="bg-[var(--dark-blue-primary)] px-4 py-2 rounded-full cursor-pointer text-white text-xl font-bold my-10 hover:bg-[var(--dark-blue-primary)]/90 transition-opacity"
       >
