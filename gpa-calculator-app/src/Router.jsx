@@ -21,6 +21,22 @@ export default function AppRouter() {
     localStorage.setItem("conversionTable", JSON.stringify(conversionTable));
   }, [conversionTable]);
 
+  const [degreeClassification, setDegreeClassification] = useState(() => {
+    const savedClassify = localStorage.getItem("degreeClassification");
+    const classify = savedClassify
+      ? JSON.parse(savedClassify)
+      : [{ grade: 3.2, degree: "Distinction" }];
+
+    return classify.map((row) => ({ ...row, grade: Number(row.grade) }));
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      "degreeClassification",
+      JSON.stringify(degreeClassification)
+    );
+  }, [degreeClassification]);
+
   const [isLinear, setIsLinear] = useState(() => {
     const savedIsLinear = localStorage.getItem("isLinear");
     return savedIsLinear ? JSON.parse(savedIsLinear) : false;
@@ -71,7 +87,6 @@ export default function AppRouter() {
             Number(lower.gradeConverted) +
             ratio *
               (Number(upper.gradeConverted) - Number(lower.gradeConverted));
-          console.log("Linear conversion:", val, "->", gradeConverted);
           return {
             gradeConverted: parseFloat(gradeConverted.toFixed(1)),
             letter: lower.letter ? lower.letter : "N/A",
@@ -92,6 +107,38 @@ export default function AppRouter() {
     console.log("Updated gradelist:", gradelist);
   }, [gradelist]);
 
+  const [direction, setDirection] = useState(() => {
+    const savedDirection = localStorage.getItem("classificationDirection");
+    return savedDirection ? savedDirection : "up";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("classificationDirection", direction);
+  }, [direction]);
+
+  const getRequiredAvg = (degreeAim) => {
+    const sortedClassify =
+      direction === "up"
+        ? [...degreeClassification].sort((a, b) => b.grade - a.grade)
+        : [...degreeClassification].sort((a, b) => a.grade - b.grade);
+    const matchingRow = sortedClassify.find(
+      (row) => degreeAim.toLowerCase() === row.degree.toLowerCase()
+    );
+    if (matchingRow) {
+      return matchingRow.grade;
+    }
+    return null;
+  };
+
+  const [curriculumCredits, setCurriculumCredits] = useState(() => {
+    const savedCredits = localStorage.getItem("curriculumCredits");
+    return savedCredits ? Number(savedCredits) : 0;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("curriculumCredits", curriculumCredits);
+  }, [curriculumCredits]);
+
   return (
     <Router>
       <Routes>
@@ -103,6 +150,8 @@ export default function AppRouter() {
               gradeList={gradelist}
               conversionRule={gradeConversion}
               isLinear={isLinear}
+              totalCurriculumCredits={curriculumCredits}
+              getRequiredAvg={getRequiredAvg}
             />
           }
         />
@@ -114,6 +163,12 @@ export default function AppRouter() {
               onUpdateConv={setConversionTable}
               setIsLinear={setIsLinear}
               isLinear={isLinear}
+              degreeClassification={degreeClassification}
+              setDegreeClassification={setDegreeClassification}
+              curriculumCredits={curriculumCredits}
+              setCurriculumCredits={setCurriculumCredits}
+              direction={direction}
+              setDirection={setDirection}
             />
           }
         />

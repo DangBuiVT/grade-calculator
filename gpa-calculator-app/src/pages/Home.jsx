@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../layouts/Header.jsx";
 import Profile from "../components/Profile.jsx";
 
-export default function Home({ gradeList, conversionRule, isLinear }) {
+export default function Home({
+  gradeList,
+  conversionRule,
+  isLinear,
+  totalCurriculumCredits,
+  getRequiredAvg,
+}) {
   const gradeColor = (letter) => {
     if (letter == "N/A") return "bg-[var(--dark-blue-primary)]";
     if (letter == "A+" || letter == "A" || letter == "A-")
@@ -16,6 +22,42 @@ export default function Home({ gradeList, conversionRule, isLinear }) {
     return "bg-[var(--f-score-color)]";
   };
 
+  const [degreeAim, setDegreeAim] = useState(() => {
+    const savedAim = localStorage.getItem("degreeAim");
+    return savedAim ? savedAim : "";
+  });
+
+  const totalGPAtimesCredits = (degreeAim) => {
+    const minGPA = getRequiredAvg(degreeAim);
+    return minGPA * Number(totalCurriculumCredits);
+  };
+
+  const [visibleCount, setVisibleCount] = React.useState(10);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        // Mobile
+        setVisibleCount(3);
+      } else if (window.innerWidth < 1024) {
+        // Tablet
+        setVisibleCount(5);
+      } else {
+        // Desktop
+        setVisibleCount(10);
+      }
+    };
+
+    // Run once on mount
+    handleResize();
+
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div>
       <Header />
@@ -23,7 +65,7 @@ export default function Home({ gradeList, conversionRule, isLinear }) {
         {/* MAIN CONTENT GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* GPA Card */}
-          <div className="bg-white p-6 rounded shadow-lg flex justify-around h-full space-x-6">
+          <div className="bg-white p-6 rounded shadow-lg flex flex-col sm:flex-row justify-around h-full space-x-6">
             <div className="flex flex-col items-center justify-center m-0">
               <h3 className="text-[var(--dark-blue-primary)] font-bold text-xl text-center mb-2">
                 GPA
@@ -62,12 +104,46 @@ export default function Home({ gradeList, conversionRule, isLinear }) {
           {/* Aiming For Card */}
           <div className="bg-white p-6 rounded shadow-lg text-center">
             <h3 className="text-[var(--dark-blue-primary)]  font-bold text-xl">
-              Aiming for: Good
+              Aiming for:{" "}
+              <input
+                type="text"
+                value={degreeAim}
+                onChange={(e) => {
+                  setDegreeAim(e.target.value);
+                  localStorage.setItem("degreeAim", e.target.value);
+                }}
+                className="text-xl font-bold text-[var(--dark-blue-primary)] border-b-2 w-32 text-center"
+              />
             </h3>
-            <p className="text-6xl font-bold text-yellow-600 my-4">2.0</p>
+            <p className="text-6xl font-bold text-yellow-600 my-4">
+              {(
+                (totalGPAtimesCredits(degreeAim) -
+                  gradeList.reduce((acc, course) => {
+                    const gradeConverted =
+                      conversionRule(course.grade10, isLinear)
+                        ?.gradeConverted || 0;
+                    return acc + gradeConverted * Number(course.credits);
+                  }, 0)) /
+                (Number(totalCurriculumCredits) -
+                  gradeList.reduce((acc, course) => {
+                    if (course.grade10 >= 5) {
+                      return acc + Number(course.credits);
+                    }
+                    return acc;
+                  }, 0))
+              ).toFixed(2)}
+            </p>
             <p className="text-gray-500 text-sm mb-6">Needed per credit</p>
             <h4 className="font-bold text-gray-600">Remaining Credits</h4>
-            <p className="mt-4 text-gray-400">----</p>
+            <p className="mt-4 text-gray-400">
+              {Number(totalCurriculumCredits) -
+                gradeList.reduce((acc, course) => {
+                  if (course.grade10 >= 5) {
+                    return acc + Number(course.credits);
+                  }
+                  return acc;
+                }, 0)}
+            </p>
           </div>
 
           {/* Recent Courses - Spans across the last 2 columns */}
@@ -77,7 +153,7 @@ export default function Home({ gradeList, conversionRule, isLinear }) {
             </div>
             <div className="flex h-48">
               {/* Course Bar 1 */}
-              {gradeList.slice(0, 10).map((course, index) => (
+              {gradeList.slice(0, visibleCount).map((course, index) => (
                 <div
                   key={index}
                   className={`flex-1 p-2 ${gradeColor(

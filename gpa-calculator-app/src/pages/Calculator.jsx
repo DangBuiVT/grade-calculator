@@ -65,7 +65,7 @@ export default function Calculator({
         <AddGrade setPopup={setAddRowPopup} setGradelist={setGradelist} />
       )}
       <div className="space-y-8">
-        <div className="flex justify-center space-x-16">
+        <div className="flex flex-wrap justify-center gap-10 mx-20">
           {/* Cumulative GPA and credits Calculation */}
           <div className="mt-10 rounded-2xl py-6 px-10 bg-white shadow-lg">
             <h3 className="text-2xl font-bold text-[var(--dark-blue-primary)]">
@@ -111,7 +111,7 @@ export default function Calculator({
             </h3>
           </div>
         </div>
-        <div className="mt-10 rounded-2xl py-6 px-10 bg-white shadow-lg flex justify-between items-center w-1/3 relative left-1/2 -translate-x-1/2">
+        <div className="mt-10 rounded-2xl py-6 px-10 bg-white shadow-lg flex justify-between items-center gap-5 mx-20">
           <h3 className="text-2xl font-bold text-[var(--dark-blue-primary)]">
             Bonus credits earned:{" "}
           </h3>
@@ -132,12 +132,12 @@ export default function Calculator({
         {Object.keys(groupCoursesBySemester).map((semester) => (
           <div
             key={semester}
-            className="mx-20 mt-10 rounded-2xl py-6 px-10 bg-white shadow-lg"
+            className="mx-20 mt-10 rounded-2xl py-6 px-10 bg-white shadow-lg overflow-x-auto"
           >
             <h3 className="text-3xl font-bold text-[var(--dark-blue-primary)]">
               Semester {semester}
             </h3>
-            <div className="mt-5 flex gap-10 justify-center ">
+            <div className="mt-5 flex gap-10 md:justify-center ">
               <div className="ml-4 px-4 py-2 text-lg font-bold border-x border-t rounded-t-2xl">
                 Semester GPA (scale 10):
                 <span className="ml-2 text-xl">

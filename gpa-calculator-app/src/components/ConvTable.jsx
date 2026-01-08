@@ -26,8 +26,8 @@ export default function ConversionTable({
   });
   return (
     <div className="mx-20">
-      <div className="flex items-center justify-between mb-4 text-xl">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 text-xl space-y-4 lg:space-y-0">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-2 lg:space-y-0 lg:space-x-4">
           <label>Lowest Passing Grade (scale 10):</label>
           <input
             type="number"
@@ -39,7 +39,7 @@ export default function ConversionTable({
             }}
           />
         </div>
-        <div className="flex items-center justify-end space-x-4 mb-4 mr-30">
+        <div className="flex items-center justify-start space-x-4 lg:mr-20">
           <label className="">Linear Grading</label>
           <input
             type="checkbox"
@@ -51,94 +51,87 @@ export default function ConversionTable({
           />
         </div>
       </div>
+      <div className="inline-block min-w-full align-middle pr-20 xl:pr-0">
+        <table className="w-full table-auto border-collapse border border-gray-300">
+          <thead className="bg-gray-50 text-[#050038] uppercase font-bold">
+            <tr>
+              <th className="px-6 py-4 border text-xl">Grade (Scale 10)</th>
+              <th className="px-6 py-4 border-y border-r text-xl">
+                Grade (Converted)
+              </th>
+              <th className="px-6 py-4 border-y border-r text-xl">
+                Grade in Letters (Optional)
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {conversionTb.map((row, index) => (
+              <tr key={index} className="hover:bg-gray-100">
+                <td className="px-6 py-4 border-x border-b">
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={row.grade10}
+                    onChange={(e) =>
+                      handleInputChange(index, "grade10", e.target.value)
+                    }
+                    className="bg-white px-3 py-2 text-lg"
+                  />
+                </td>
+                <td className="px-6 py-4 border-r border-b ">
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={row.gradeConverted}
+                    onChange={(e) =>
+                      handleInputChange(index, "gradeConverted", e.target.value)
+                    }
+                    className="bg-white px-3 py-2 text-lg"
+                  />
+                </td>
+                <td className="px-6 py-4 border-r border-b ">
+                  <input
+                    type="text"
+                    value={row.letter}
+                    onChange={(e) =>
+                      handleInputChange(index, "letter", e.target.value)
+                    }
+                    className="bg-white px-3 py-2 text-lg"
+                  />
+                </td>
 
-      <table className="w-full table-auto border-collapse border border-gray-300">
-        <thead className="bg-gray-50 text-[#050038] uppercase font-bold">
-          <tr>
-            <th className="px-6 py-4 border text-xl">Grade (Scale 10)</th>
-            <th className="px-6 py-4 border-y border-r text-xl">
-              Grade (Converted)
-            </th>
-            <th className="px-6 py-4 border-y border-r text-xl">
-              Grade in Letters (Optional)
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {conversionTb.map((row, index) => (
-            <tr key={index} className="hover:bg-gray-100">
-              <td className="px-6 py-4 border-x border-b">
-                <input
-                  type="number"
-                  step="0.1"
-                  value={row.grade10}
-                  onChange={(e) =>
-                    handleInputChange(index, "grade10", e.target.value)
-                  }
-                  className="bg-white px-3 py-2 text-lg"
-                />
-              </td>
-              <td className="px-6 py-4 border-r border-b ">
-                <input
-                  type="number"
-                  step="0.1"
-                  value={row.gradeConverted}
-                  onChange={(e) =>
-                    handleInputChange(index, "gradeConverted", e.target.value)
-                  }
-                  className="bg-white px-3 py-2 text-lg"
-                />
-              </td>
-              <td className="px-6 py-4 border-r border-b ">
-                <input
-                  type="text"
-                  value={row.letter}
-                  onChange={(e) =>
-                    handleInputChange(index, "letter", e.target.value)
-                  }
-                  className="bg-white px-3 py-2 text-lg"
-                />
-              </td>
+                <td className="border-r border-y font-bold text-red-500 text-xl p-0 h-px ">
+                  <div className="flex h-full w-full block">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updatedConversions = conversionTb.filter(
+                          (_, i) => i !== index
+                        );
+                        setConversions(updatedConversions);
+                      }}
+                      className="cursor-pointer w-full h-full block hover:bg-red-500 hover:text-white transition-colors p-4"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
 
-              <td className="border-r border-y font-bold text-red-500 text-xl p-0 h-px ">
-                <div className="flex h-full w-full block">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const updatedConversions = conversionTb.filter(
-                        (_, i) => i !== index
-                      );
-                      setConversions(updatedConversions);
-                    }}
-                    className="cursor-pointer w-full h-full block hover:bg-red-500 hover:text-white transition-colors"
-                  >
-                    Delete
-                  </button>
-                </div>
+            <tr>
+              <td colSpan={3} className="border-x border-b font-bold text-2xl">
+                <button
+                  onClick={addRow}
+                  className="px-6 py-4 cursor-pointer w-full h-full hover:bg-[var(--dark-blue-primary)] hover:text-white transition-colors"
+                >
+                  Add a row +
+                </button>
               </td>
             </tr>
-          ))}
-
-          <tr>
-            <td colSpan={3} className="border-x border-b font-bold text-2xl">
-              <button
-                onClick={addRow}
-                className="px-6 py-4 cursor-pointer w-full h-full hover:bg-[var(--dark-blue-primary)] hover:text-white transition-colors"
-              >
-                Add a row +
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button
-        onClick={() => {
-          window.location.href = "/";
-        }}
-        className="bg-[var(--dark-blue-primary)] px-4 py-2 rounded-full cursor-pointer text-white text-xl font-bold my-10 hover:bg-[var(--dark-blue-primary)]/90 transition-opacity"
-      >
-        Finish changes
-      </button>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
