@@ -140,7 +140,7 @@ export default function AppRouter() {
   }, [curriculumCredits]);
 
   return (
-    <Router>
+    <Router basename="/grade-calculator">
       <Routes>
         <Route path="/introduction" element={<Introduction />} />
         <Route
