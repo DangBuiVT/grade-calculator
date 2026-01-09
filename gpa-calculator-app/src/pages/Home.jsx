@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Header from "../layouts/Header.jsx";
 import Profile from "../components/Profile.jsx";
+import { useLanguage } from "../LanguageContext.jsx";
 
 export default function Home({
   gradeList,
@@ -9,6 +10,8 @@ export default function Home({
   totalCurriculumCredits,
   getRequiredAvg,
 }) {
+  const { language } = useLanguage();
+
   const gradeColor = (letter) => {
     if (letter == "N/A") return "bg-[var(--dark-blue-primary)]";
     if (letter == "A+" || letter == "A" || letter == "A-")
@@ -88,7 +91,7 @@ export default function Home({
 
             <div className="flex flex-col items-center justify-center">
               <h3 className="text-[var(--dark-blue-primary)] font-bold text-xl text-center mb-2">
-                Credits
+                {language === "en" ? "Accumulated credits" : "Tín chỉ tích lũy"}
               </h3>
               <p className="text-6xl font-bold text-yellow-600 text-center mb-6 mt-4">
                 {gradeList.reduce((acc, course) => {
@@ -104,7 +107,7 @@ export default function Home({
           {/* Aiming For Card */}
           <div className="bg-white p-6 rounded shadow-lg text-center">
             <h3 className="text-[var(--dark-blue-primary)]  font-bold text-xl">
-              Aiming for:{" "}
+              {language === "en" ? "Aiming for: " : "Mục tiêu: "}
               <input
                 type="text"
                 value={degreeAim}
@@ -133,8 +136,14 @@ export default function Home({
                   }, 0))
               ).toFixed(2)}
             </p>
-            <p className="text-gray-500 text-sm mb-6">Needed per credit</p>
-            <h4 className="font-bold text-gray-600">Remaining Credits</h4>
+            <p className="text-gray-500 text-sm mb-6">
+              {language === "en"
+                ? "Needed per credit"
+                : "GPA cần đạt mỗi tín chỉ"}
+            </p>
+            <h4 className="font-bold text-gray-600">
+              {language === "en" ? "Remaining credits" : "Số tín chỉ còn lại"}
+            </h4>
             <p className="mt-4 text-gray-400">
               {Number(totalCurriculumCredits) -
                 gradeList.reduce((acc, course) => {
@@ -149,7 +158,9 @@ export default function Home({
           {/* Recent Courses - Spans across the last 2 columns */}
           <div className="md:col-span-2 bg-gray-300 rounded shadow-lg overflow-hidden">
             <div className="bg-gray-400 p-2 text-center font-bold text-[#050038]">
-              Most recent courses
+              {language === "en"
+                ? "Most recent courses"
+                : "Các môn học gần đây"}
             </div>
             <div className="flex h-48">
               {/* Course Bar 1 */}

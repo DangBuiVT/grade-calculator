@@ -26,10 +26,10 @@ export default function AddGrade({ setPopup, setGradelist }) {
 
   return (
     <div className="bg-[var(--dark-blue-primary)]/40 w-full z-50 h-full fixed top-0 left-0 flex items-center justify-center bg-opacity-50">
-      <div className="fixed inset-0 bg-[#ECEFF1] border-4 rounded-3xl absolute top-1/2 left-1/2 -translate-1/2 border-[var(--dark-blue-primary)] w-3/5 bg-opacity-50 flex flex-col gap-5 items-center justify-center z-50 p-10 h-3/5">
+      <div className="fixed bg-[#ECEFF1] w-11/12 xl:w-3/5 h-auto rounded-3xl shadow-lg flex flex-col items-center gap-6 py-6 px-5 md:px-20 relative border-4 border-[var(--dark-blue-primary)]">
         {/* Need to input: Course Name, Course code and course grade in scale 10 */}
         {/* Cancel btn */}
-        <button className="text-red-500 absolute top-2 right-2">
+        <button className="text-white text-shadow-lg xl:text-red-500 absolute -top-15 xl:top-2 right-2">
           <Icon
             icon="ic:round-cancel"
             width="40"
@@ -37,8 +37,8 @@ export default function AddGrade({ setPopup, setGradelist }) {
             onClick={handleCancel}
           />
         </button>
-        <div className="flex gap-4 items-center justify-between w-3/4">
-          <label className="w-48 font-bold text-2xl px-3 py-2 rounded-full text-left">
+        <div className="flex gap-4 items-center justify-between w-full">
+          <label className="w-48 font-bold text-lg sm:text-2xl px-3 py-2 rounded-full text-left">
             Semester:
           </label>
           <input
@@ -49,8 +49,8 @@ export default function AddGrade({ setPopup, setGradelist }) {
           />
         </div>
 
-        <div className="flex gap-4 items-center justify-between w-3/4">
-          <label className="w-48 font-bold text-2xl px-3 py-2 rounded-full text-left">
+        <div className="flex gap-4 items-center justify-between w-full">
+          <label className="w-48 font-bold text-lg sm:text-2xl px-3 py-2 rounded-full text-left">
             Course Name:
           </label>
           <input
@@ -61,8 +61,8 @@ export default function AddGrade({ setPopup, setGradelist }) {
           />
         </div>
 
-        <div className="flex gap-4 items-center justify-between w-3/4">
-          <label className="font-bold text-2xl px-3 py-2 rounded-full text-left">
+        <div className="flex gap-4 items-center justify-between w-full">
+          <label className="font-bold text-lg sm:text-2xl px-3 py-2 rounded-full text-left">
             Course Code:
           </label>
           <input
@@ -73,8 +73,8 @@ export default function AddGrade({ setPopup, setGradelist }) {
           />
         </div>
 
-        <div className="flex gap-4 items-center justify-between w-3/4">
-          <label className="font-bold text-2xl px-3 py-2 rounded-full text-left">
+        <div className="flex gap-4 items-center justify-between w-full">
+          <label className="font-bold text-lg sm:text-2xl px-3 py-2 rounded-full text-left">
             Credits:
           </label>
           <input
@@ -86,8 +86,8 @@ export default function AddGrade({ setPopup, setGradelist }) {
           />
         </div>
 
-        <div className="flex gap-4 items-center justify-between w-3/4">
-          <label className="font-bold text-2xl px-3 py-2 rounded-full text-left">
+        <div className="flex gap-4 items-center justify-between w-full">
+          <label className="font-bold text-lg sm:text-2xl px-3 py-2 rounded-full text-left">
             Grade (out of 10):
           </label>
           <input

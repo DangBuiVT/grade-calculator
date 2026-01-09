@@ -1,3 +1,5 @@
+import { useLanguage } from "../LanguageContext";
+
 export default function DegClassify({
   degreeClassification,
   setDegreeClassification,
@@ -5,6 +7,7 @@ export default function DegClassify({
   // Modify degree classification settings here
   // Where should lies the lowest grade for each degree classification
   // We have: High distinction, Distinction, Credit, Average and Fail to graduate
+  const { language } = useLanguage();
   const addRow = () => {
     const newRow = { grade: 0, degree: "" };
     setDegreeClassification((prevClassifications) => [
@@ -27,10 +30,12 @@ export default function DegClassify({
         <thead className="bg-gray-50 text-[#050038] uppercase font-bold">
           <tr>
             <th className="px-6 py-4 border text-xl">
-              Lowest Grade (Converted scale)
+              {language === "en"
+                ? "Lowest grade (converted scale)"
+                : "Điểm chuẩn (thang đã chuyển đổi)"}
             </th>
             <th className="px-6 py-4 border-y border-r text-xl">
-              Degree Classification
+              {language === "en" ? "Degree classification" : "Xếp loại học lực"}
             </th>
           </tr>
         </thead>
@@ -71,7 +76,7 @@ export default function DegClassify({
                     }}
                     className="cursor-pointer w-full h-full block hover:bg-red-500 hover:text-white transition-colors p-4"
                   >
-                    Delete
+                    {language === "en" ? "Delete" : "Xóa"}
                   </button>
                 </div>
               </td>
@@ -84,7 +89,7 @@ export default function DegClassify({
                 onClick={addRow}
                 className="px-6 py-4 cursor-pointer w-full h-full hover:bg-[var(--dark-blue-primary)] hover:text-white transition-colors"
               >
-                Add a row +
+                {language === "en" ? "Add a row +" : "Thêm hàng +"}
               </button>
             </td>
           </tr>

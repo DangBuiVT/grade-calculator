@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import Header from "../layouts/Header";
 import { Icon } from "@iconify/react";
 import AddGrade from "../components/AddGrade";
+import { useLanguage } from "../LanguageContext.jsx";
 
 export default function Calculator({
   gradeList,
@@ -9,6 +10,7 @@ export default function Calculator({
   conversionRule,
   isLinear,
 }) {
+  const { language } = useLanguage();
   var lowestPass = Number(localStorage.getItem("lowestPass")) || 4.0;
   const groupCoursesBySemester = gradeList.reduce((acc, course) => {
     if (!acc[course.semester]) {
@@ -69,7 +71,7 @@ export default function Calculator({
           {/* Cumulative GPA and credits Calculation */}
           <div className="mt-10 rounded-2xl py-6 px-10 bg-white shadow-lg">
             <h3 className="text-2xl font-bold text-[var(--dark-blue-primary)]">
-              GPA (scale 10):{" "}
+              {language === "en" ? "GPA (scale 10): " : "GPA (thang 10): "}
               {(
                 uniqueCourseList.reduce((acc, course) => {
                   return acc + course.grade10 * Number(course.credits);
@@ -84,7 +86,9 @@ export default function Calculator({
 
           <div className="mt-10 rounded-2xl py-6 px-10 bg-white shadow-lg">
             <h3 className="text-2xl font-bold text-[var(--dark-blue-primary)]">
-              GPA (converted):{" "}
+              {language === "en"
+                ? "GPA (converted): "
+                : "GPA (đã chuyển đổi): "}
               {(
                 uniqueCourseList.reduce((acc, course) => {
                   const gradeConverted =
@@ -101,7 +105,9 @@ export default function Calculator({
           </div>
           <div className="mt-10 rounded-2xl py-6 px-10 bg-white shadow-lg">
             <h3 className="text-2xl font-bold text-[var(--dark-blue-primary)]">
-              Total Credits Earned:{" "}
+              {language === "en"
+                ? "Total credits earned: "
+                : "Tín chỉ tích lũy: "}
               {uniqueCourseList.reduce((acc, course) => {
                 if (course.grade10 >= lowestPass) {
                   return acc + Number(course.credits);
@@ -113,7 +119,9 @@ export default function Calculator({
         </div>
         <div className="mt-10 rounded-2xl py-6 px-10 bg-white shadow-lg flex justify-between items-center gap-5 mx-20">
           <h3 className="text-2xl font-bold text-[var(--dark-blue-primary)]">
-            Bonus credits earned:{" "}
+            {language === "en"
+              ? "Bonus credits earned: "
+              : "Tín chỉ được miễn: "}
           </h3>
           <input
             type="number"
@@ -135,11 +143,13 @@ export default function Calculator({
             className="mx-20 mt-10 rounded-2xl py-6 px-10 bg-white shadow-lg overflow-x-auto"
           >
             <h3 className="text-3xl font-bold text-[var(--dark-blue-primary)]">
-              Semester {semester}
+              {language === "en" ? "Semester: " : "Học kỳ: "} {semester}
             </h3>
             <div className="mt-5 flex gap-10 md:justify-center ">
               <div className="ml-4 px-4 py-2 text-lg font-bold border-x border-t rounded-t-2xl">
-                Semester GPA (scale 10):
+                {language === "en"
+                  ? "Semester GPA (scale 10): "
+                  : "Điểm trung bình học kỳ (thang 10): "}
                 <span className="ml-2 text-xl">
                   {(
                     groupCoursesBySemester[semester].reduce((acc, course) => {
@@ -153,7 +163,9 @@ export default function Calculator({
                 </span>
               </div>
               <div className="ml-4 px-4 py-2 text-lg font-bold border-x border-t rounded-t-2xl">
-                Semester GPA (converted):
+                {language === "en"
+                  ? "Semester GPA (converted): "
+                  : "Điểm trung bình học kỳ (đã chuyển đổi): "}
                 <span className="ml-2 text-xl">
                   {(
                     groupCoursesBySemester[semester].reduce((acc, course) => {
@@ -170,7 +182,9 @@ export default function Calculator({
                 </span>
               </div>
               <div className="ml-4 px-4 py-2 text-lg  font-bold border-x border-t rounded-t-2xl">
-                Semester credits:
+                {language === "en"
+                  ? "Semester credits: "
+                  : "Tín chỉ tích luỹ học kỳ: "}
                 <span className="ml-2 text-xl">
                   {groupCoursesBySemester[semester].reduce((acc, course) => {
                     if (course.grade10 >= lowestPass) {
@@ -184,14 +198,34 @@ export default function Calculator({
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-gray-200">
-                  <th className="p-2 border">Course</th>
-                  <th className="p-2 border">Code</th>
-                  <th className="p-2 border">Credits</th>
-                  <th className="p-2 border">Grade (out of 10)</th>
-                  <th className="p-2 border">Grade (converted)</th>
-                  <th className="p-2 border">Grade in Letters</th>
-                  <th className="p-2 border">Passed</th>
-                  <th className="p-2 border">Remove</th>
+                  <th className="p-2 border">
+                    {language === "en" ? "Course" : "Môn học"}
+                  </th>
+                  <th className="p-2 border">
+                    {language === "en" ? "Code" : "Mã môn học"}
+                  </th>
+                  <th className="p-2 border">
+                    {language === "en" ? "Credits" : "Tín chỉ"}
+                  </th>
+                  <th className="p-2 border">
+                    {language === "en"
+                      ? "Grade (scale 10)"
+                      : "Điểm trung bình (thang 10)"}
+                  </th>
+                  <th className="p-2 border">
+                    {language === "en"
+                      ? "Grade (converted)"
+                      : "Điểm trung bình (đã chuyển đổi): "}
+                  </th>
+                  <th className="p-2 border">
+                    {language === "en" ? "Grade in Letter" : "Điểm chữ"}
+                  </th>
+                  <th className="p-2 border">
+                    {language === "en" ? "Passed" : "Tình trạng"}
+                  </th>
+                  <th className="p-2 border">
+                    {language === "en" ? "Remove" : "Xóa"}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -208,7 +242,13 @@ export default function Calculator({
                       {conversionRule(course.grade10, isLinear)?.letter}
                     </td>
                     <td className="p-2 border">
-                      {course.grade10 >= lowestPass ? "Yes" : "No"}
+                      {course.grade10 >= lowestPass
+                        ? language === "en"
+                          ? "Yes"
+                          : "Đạt"
+                        : language === "en"
+                        ? "No"
+                        : "Không đạt"}
                     </td>
                     <td className="p-2 border">
                       <button
@@ -221,7 +261,7 @@ export default function Calculator({
                           )
                         }
                       >
-                        Remove
+                        {language === "en" ? "Remove" : "Xóa"}
                       </button>
                     </td>
                   </tr>
@@ -235,7 +275,7 @@ export default function Calculator({
         className="bg-[var(--dark-blue-primary)] text-white rounded-xl my-10 py-4 px-6 text-2xl font-bold relative cursor-pointer"
         onClick={() => setAddRowPopup(true)}
       >
-        Add new grade +
+        {language === "en" ? "Add new grade +" : "Thêm môn học +"}
       </button>
     </div>
   );

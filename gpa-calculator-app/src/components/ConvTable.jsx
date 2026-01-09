@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLanguage } from "../LanguageContext.jsx";
 
 export default function ConversionTable({
   conversionTb,
@@ -6,6 +7,7 @@ export default function ConversionTable({
   isLinear,
   setIsLinear,
 }) {
+  const { language } = useLanguage();
   // Marking parameters: grade in scale 10, grade in scale 4, letter grade
   const addRow = () => {
     const newRow = { grade10: 0, gradeConverted: 0, letter: "" };
@@ -28,7 +30,11 @@ export default function ConversionTable({
     <div className="mx-20">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 text-xl space-y-4 lg:space-y-0">
         <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-2 lg:space-y-0 lg:space-x-4">
-          <label>Lowest Passing Grade (scale 10):</label>
+          <label>
+            {language === "en"
+              ? "Passing grade (scale 10): "
+              : "Điểm đạt (thang 10): "}
+          </label>
           <input
             type="number"
             className="bg-white border-2 py px-3"
@@ -40,7 +46,9 @@ export default function ConversionTable({
           />
         </div>
         <div className="flex items-center justify-start space-x-4 lg:mr-20">
-          <label className="">Linear Grading</label>
+          <label className="">
+            {language === "en" ? "Linear Grading" : "Thang tuyến tính"}
+          </label>
           <input
             type="checkbox"
             checked={isLinear}
@@ -55,12 +63,18 @@ export default function ConversionTable({
         <table className="w-full table-auto border-collapse border border-gray-300">
           <thead className="bg-gray-50 text-[#050038] uppercase font-bold">
             <tr>
-              <th className="px-6 py-4 border text-xl">Grade (Scale 10)</th>
-              <th className="px-6 py-4 border-y border-r text-xl">
-                Grade (Converted)
+              <th className="px-6 py-4 border text-xl">
+                {language === "en" ? "Grade (scale 10)" : "Điểm (thang 10)"}
               </th>
               <th className="px-6 py-4 border-y border-r text-xl">
-                Grade in Letters (Optional)
+                {language === "en"
+                  ? "Grade (converted)"
+                  : "Điểm (đã chuyển đổi)"}
+              </th>
+              <th className="px-6 py-4 border-y border-r text-xl">
+                {language === "en"
+                  ? "Grade in letter (optional)"
+                  : "Điểm chữ (nếu có)"}
               </th>
             </tr>
           </thead>
@@ -112,7 +126,7 @@ export default function ConversionTable({
                       }}
                       className="cursor-pointer w-full h-full block hover:bg-red-500 hover:text-white transition-colors p-4"
                     >
-                      Delete
+                      {language === "en" ? "Delete" : "Xóa"}
                     </button>
                   </div>
                 </td>
@@ -125,7 +139,7 @@ export default function ConversionTable({
                   onClick={addRow}
                   className="px-6 py-4 cursor-pointer w-full h-full hover:bg-[var(--dark-blue-primary)] hover:text-white transition-colors"
                 >
-                  Add a row +
+                  {language === "en" ? "Add a row +" : "Thêm hàng +"}
                 </button>
               </td>
             </tr>

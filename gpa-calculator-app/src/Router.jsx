@@ -1,7 +1,7 @@
 /* Router page */
 
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Introduction from "./pages/Introduction";
 import Home from "./pages/Home";
 import Settings from "./pages/Settings";
@@ -140,7 +140,7 @@ export default function AppRouter() {
   }, [curriculumCredits]);
 
   return (
-    <Router basename="/grade-calculator">
+    <Router>
       <Routes>
         <Route path="/introduction" element={<Introduction />} />
         <Route
